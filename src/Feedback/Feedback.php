@@ -4,7 +4,7 @@ namespace Feedback;
 
 use DateTimeImmutable;
 
-class Feedback
+class Feedback implements \JsonSerializable
 {
     private FeedbackId $id;
     private string $text;
@@ -48,4 +48,12 @@ class Feedback
         return $this->dateTime;
     }
 
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id()->value(),
+            'text' => $this->text(),
+            'dateTime' => $this->dateTime()->format('Y-m-d H:i:s')
+        ];
+    }
 }
