@@ -53,7 +53,7 @@ class Feedback implements \JsonSerializable
         return [
             'id' => $this->id()->value(),
             'text' => $this->text(),
-            'dateTime' => $this->dateTime()->format('Y-m-d H:i:s')
+            'dateTime' => $this->dateTime()->format('c')
         ];
     }
 }

@@ -24,35 +24,27 @@ class FeedbackAction
     }
 
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args) {
-
         // validate data
             // TODO
 
-        $id = new FeedbackId(Uuid::uuid4()->toString());
-
-
         // create feedback object
         $feedback = new Feedback(
-            $id,
+            new FeedbackId(Uuid::uuid4()->toString()),
             $request->getParsedBody()['text'],
             new \DateTimeImmutable()
         );
 
-        // create feedback entity
-        $feedbackEntity = FeedbackEntityFactory::createFromFeedback($feedback);
-
-        // store entity in DB
-        // TODO: put this into config
-        $dbPath = __DIR__ . '/../../../database/feedback.sqlite3';
-
+        // store in DB
         // TODO: get repository from container
-        $feedbackRepository = new SQLFeedbackRepository(new \PDO('sqlite:' . $dbPath));
-        $feedbackRepository->store($feedbackEntity);
+        $feedbackRepository = new SQLFeedbackRepository(
+            new \PDO($this->container->get('database_host'))
+        );
+        
+        $feedbackRepository->store(
+            FeedbackEntityFactory::createFromFeedback($feedback)
+        );
 
-        // return 201
-        $payload = json_encode($feedback);
-
-        $response->getBody()->write($payload);
+        $response->getBody()->write(json_encode($feedback));
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(201);

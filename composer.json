@@ -1,17 +1,21 @@
 {
-    "name": "iamthewit/feedback",
+    "name": "iamthewit/feedback-slackbot",
     "type": "project",
-    "require-dev": {
-        "phpunit/phpunit": "^9.2",
-        "kint-php/kint": "^3.3"
+    "config": {
+        "sort-packages": true
     },
     "require": {
-        "slim/slim": "4.*",
-        "slim/psr7": "^1.1",
-        "php-di/php-di": "^6.2",
         "ext-json": "*",
+        "ext-pdo": "*",
+        "php-di/php-di": "^6.2",
         "ramsey/uuid": "^4.0",
-        "ext-pdo": "*"
+        "slim/psr7": "^1.1",
+        "slim/slim": "4.*",
+        "vlucas/phpdotenv": "^5.0"
+    },
+    "require-dev": {
+        "kint-php/kint": "^3.3",
+        "phpunit/phpunit": "^9.2"
     },
     "autoload": {
         "psr-4": {

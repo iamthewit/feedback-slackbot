@@ -37,8 +37,11 @@ class SQLFeedbackRepository implements FeedbackRepositoryInterface
 
     public function store(FeedbackEntity $feedbackEntity): void
     {
-        $sql = "INSERT INTO `feedback` (`id`, `text`, `datetime`) VALUES (:id, :text, :datetime)";
-
+        $sql = <<<SQL
+INSERT INTO `feedback` 
+    (`id`, `text`, `datetime`) 
+    VALUES (:id, :text, :datetime)
+SQL;
         $statement = $this->host->prepare($sql);
         $statement->execute([
             'id' => $feedbackEntity->getId(),
