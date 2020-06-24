@@ -2,6 +2,8 @@
 
 namespace Application\Api;
 
+use Application\Utility\Exception\InvalidSlackSignatureException;
+use Application\Utility\VerifySlackSignatureFromRequest;
 use Factory\FeedbackEntityFactory;
 use Feedback\Feedback;
 use Feedback\FeedbackId;
@@ -10,6 +12,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Ramsey\Uuid\Uuid;
 use Repository\SQLFeedbackRepository;
+use Slim\Exception\HttpUnauthorizedException;
 
 /**
  * Class FeedbackAction
@@ -26,6 +29,14 @@ class FeedbackAction
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $args) {
         // validate data
             // TODO
+
+        // verify slack signature
+        $verify = $this->container->get(VerifySlackSignatureFromRequest::class);
+        try {
+            $verify->execute($request);
+        } catch (InvalidSlackSignatureException $e) {
+            throw new HttpUnauthorizedException($request, $e->getMessage(), $e);
+        }
 
         // create feedback object
         $feedback = new Feedback(
